@@ -1,0 +1,155 @@
+<div class="p-3">
+  <h1>Bienvenido al Dashboard de Usuario</h1>
+  <p>Aquí puedes ver tus datos y otra información relevante.</p>
+
+  <div class="d-flex p-1">
+    <div class="p-1">
+      <input
+        type="text"
+        pInputText
+        placeholder="Buscar por nombre o email"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+    <div class="p-1">
+      <p-dropdown
+        [options]="roles"
+        [(ngModel)]="selectedRole"
+        optionLabel="name"
+        optionValue="code"
+        placeholder="Seleccionar Rol"
+        (onChange)="onRoleChange()"
+      >
+      </p-dropdown>
+    </div>
+
+    <div class="p-1">
+      <button pButton label="Agregar Usuario" icon="pi pi-user-plus" (click)="openAddUserDialog()"></button>
+    </div>
+  </div>
+
+  <p-table [value]="paginatedUsers" class="p-1">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">ID <p-sortIcon field="id" /></th>
+        <th pSortableColumn="name">Nombre <p-sortIcon field="name" /></th>
+        <th pSortableColumn="email">Email <p-sortIcon field="email" /></th>
+        <th pSortableColumn="role">Rol <p-sortIcon field="role" /></th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td>
+          <button class="m-1" pButton [outlined]="true" (click)="onEdit(user)">
+            Editar
+          </button>
+          <button
+            class="m-1"
+            pButton
+            severity="danger"
+            (click)="confirmDelete(user)"
+          >
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-paginator
+    [rows]="rowsPerPage"
+    [totalRecords]="totalRecords"
+    (onPageChange)="onPageChange($event)"
+  >
+  </p-paginator>
+
+  <p-dialog
+    header="Editar Usuario"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '35rem' }"
+  >
+    <div class="p-fluid">
+      <div *ngIf="userToEdit" class="edit-user-form">
+        <div class="p-field p-2">
+          <label for="name">Nombre</label>
+          <input
+            id="name"
+            pInputText
+            [(ngModel)]="userToEdit.name"
+            placeholder="Ingresa el nombre"
+          />
+        </div>
+
+        <div class="p-field p-2">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            pInputText
+            type="email"
+            [(ngModel)]="userToEdit.email"
+            placeholder="Ingresa el email"
+          />
+        </div>
+
+        <div class="p-field p-2">
+          <label for="role">Rol</label>
+          <p-dropdown
+            id="role"
+            [(ngModel)]="userToEdit.role"
+            [options]="roles"
+            placeholder="Seleccionar rol"
+            optionLabel="name"
+            optionValue="code"
+          ></p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-content-end gap-2 p-3">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        (click)="userToEdit = null"
+        (onClick)="visible = false"
+      />
+      <p-button
+        label="Guardar"
+        (click)="saveUser()"
+        (onClick)="visible = false"
+      />
+    </div>
+  </p-dialog>
+
+  <p-dialog header="Agregar Nuevo Usuario" [(visible)]="displayAddUserDialog" [modal]="true" [closable]="false" [resizable]="false" [draggable]="false">
+    <div class="p-fluid">
+      <div class="p-field">
+        <label for="newUserName">Nombre</label>
+        <input id="newUserName" pInputText [(ngModel)]="newUser.name" placeholder="Ingresa el nombre"/>
+      </div>
+  
+      <div class="p-field">
+        <label for="newUserEmail">Email</label>
+        <input id="newUserEmail" pInputText type="email" [(ngModel)]="newUser.email" placeholder="Ingresa el email"/>
+      </div>
+  
+      <div class="p-field">
+        <label for="newUserRole">Rol</label>
+        <p-dropdown id="newUserRole" [(ngModel)]="newUser.role" [options]="roles"             optionLabel="name"
+        optionValue="code" placeholder="Seleccionar rol"></p-dropdown>
+      </div>
+  
+      <div class="p-field">
+        <button pButton label="Agregar" (click)="addUser()"></button>
+        <button pButton label="Cancelar" class="p-button-danger" (click)="displayAddUserDialog = false"></button>
+      </div>
+    </div>
+  </p-dialog>
+</div>
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

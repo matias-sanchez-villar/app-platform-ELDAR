@@ -1,0 +1,10 @@
+<p-menubar styleClass="custom-menubar">
+  <div class="p-menubar-start">
+    <button class="m-1" pButton [text]="true" label="Front End - Challenge Ssr" (click)="goToExternalLink()"></button>
+    <button *ngIf="isLoggedIn" class="m-1" routerLink="/login" pButton [text]="true" icon="pi pi-power-off" label="Logout" (click)="logout()"></button>
+  </div>
+</p-menubar>
+
+<div class="m-2">
+<router-outlet></router-outlet>
+</div>
